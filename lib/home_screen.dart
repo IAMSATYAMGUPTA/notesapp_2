@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:note_2_flutter/create_note.dart';
-import 'package:note_2_flutter/tile.dart';
 
 import 'app_database.dart';
 import 'note_model.dart';
@@ -45,6 +44,8 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
+                // ------------------ showing title and search bar-------------------
                 Text("Notes",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 30),),
                 Container(
                   height: 40,
@@ -68,7 +69,8 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CreateNotePage(title: arrNotes[index].title,desc: arrNotes[index].desc,date: arrNotes[index].date,id : arrNotes[index].id),));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          CreateNotePage(title: arrNotes[index].title,desc: arrNotes[index].desc,date: arrNotes[index].date,id : arrNotes[index].id),));
                     },
                     child: Container(
                       height: height[index % height.length],
@@ -78,6 +80,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: Stack(
                         children: [
+
+                          // ------------------ showing delete button-------------------
                           Align(
                             alignment: Alignment(1,-1),
                             child: IconButton(
@@ -89,6 +93,8 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                           ),
+
+                          //------------------ Notes List using staggered Gridview------------
                           Padding(
                             padding: const EdgeInsets.all(15.0),
                             child: Column(
@@ -112,6 +118,8 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
+
+      //------------------------Add Note Button-----------------------------
       floatingActionButton: FloatingActionButton(
         elevation: 4,
         focusElevation: 2.0,

@@ -34,12 +34,17 @@ class _CreateNotePageState extends State<CreateNotePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    //----------------------check title value Null or Not------------------
     if(widget.date!=null){
       titleController.text = widget.title;
       descController.text = widget.desc;
     }
+
+    // ------------------------------Get Current Date----------------------
     var date = DateTime.now();
     var currentDate = DateFormat.yMMMMd('en_US').format(date).toString();
+
     return Scaffold(
       backgroundColor: Colors.black54,
       body: Column(
@@ -51,6 +56,8 @@ class _CreateNotePageState extends State<CreateNotePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
+                //-----------------------back Screen Arrow-----------------
                 InkWell(
                   onTap: (){
                     Navigator.pop(context);
@@ -65,6 +72,9 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     ),
                   ),
                 ),
+
+
+                //-----------------------Save Note Work-----------------
                 InkWell(
                   onTap: widget.date!=null ? (){
                     myDB.updateNote(NoteModel(title: titleController.text.toString(), desc: descController.text.toString(), date: currentDate,id: widget.id));
@@ -82,10 +92,13 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     ),
                   ),
                 ),
+
               ],
             ),
           ),
           SizedBox(height: 15,),
+
+          //----------------------------add Title-----------------------------
           TextField(
             controller: titleController,
             style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 37),
@@ -100,8 +113,14 @@ class _CreateNotePageState extends State<CreateNotePage> {
               ),
             ),
           ),
+
+
+          //----------------------------Show Date-----------------------------
           widget.date!=null ? Text("   ${widget.date}",style: TextStyle(color: Colors.grey,fontSize: 18),):Container(),
           SizedBox(height: 10,),
+
+
+          //----------------------------add Desc-----------------------------
           TextField(
             controller: descController,
             maxLines: null,
