@@ -26,22 +26,19 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     myDB = AppDataBase.db;
-    // getNotes();
+    getNotes();
   }
 
-  void getNotes() async {
-    arrNotes = await myDB.fetchAllNotes();
-    setState(() {});
+  // get provider refrrence for initial condition // also call fetch note fun in provider class
+  void getNotes(){
+    Provider.of<DatabaseProvider>(context,listen: false).fetchNote();
+    setState(() {
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
-    // Access the DatabaseProvider using provider
-    final databaseProvider = Provider.of<DatabaseProvider>(context);
-
-    // Call fetchNote to populate the list of notes
-    databaseProvider.fetchNote();
 
     return Scaffold(
       backgroundColor: Colors.black54,
@@ -68,65 +65,68 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          Expanded(
-            child: StaggeredGridView.countBuilder(
-                crossAxisCount: 2,
-                mainAxisSpacing: 13,
-                crossAxisSpacing: 13,
-                padding: EdgeInsets.only(left: 7,right: 7),
-                itemCount: databaseProvider.noteList.length,
-                itemBuilder: (context, index) {
-                  // Get the NoteModel for the current index
-                  NoteModel note = databaseProvider.noteList[index];
-                  return InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          CreateNotePage(title: note.title,desc: note.desc,date: note.date,id : note.id),));
-                    },
-                    child: Container(
-                      height: height[index % height.length],
-                      decoration: BoxDecoration(
-                          color: colorList[index % colorList.length ],
-                          borderRadius: BorderRadius.circular(12)
-                      ),
-                      child: Stack(
-                        children: [
+          Consumer<DatabaseProvider>(builder: (context, value, child) {
+            // Get the NoteModel for the current index
+            print("object");
+            arrNotes = value.noteList;
+            return Expanded(
+              child: StaggeredGridView.countBuilder(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 13,
+                  crossAxisSpacing: 13,
+                  padding: EdgeInsets.only(left: 7,right: 7),
+                  itemCount: arrNotes.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                            CreateNotePage(title: arrNotes[index].title,desc: arrNotes[index].desc,date: arrNotes[index].date,id : arrNotes[index].id),));
+                      },
+                      child: Container(
+                        height: height[index % height.length],
+                        decoration: BoxDecoration(
+                            color: colorList[index % colorList.length ],
+                            borderRadius: BorderRadius.circular(12)
+                        ),
+                        child: Stack(
+                          children: [
 
-                          // ------------------ showing delete button-------------------
-                          // Align(
-                          //   alignment: Alignment(1,-1),
-                          //   child: IconButton(
-                          //     icon: Icon(Icons.delete),
-                          //     color: Colors.black54,
-                          //     onPressed: (){
-                          //       myDB.deleteNote(arrNotes[index].id!);
-                          //       getNotes();
-                          //     },
-                          //   ),
-                          // ),
-
-                          //------------------ Notes List using staggered Gridview------------
-                          Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(note.desc,style: TextStyle(fontSize: 23),softWrap: true,maxLines: 4,overflow: TextOverflow.ellipsis,),
-                                Text(note.date,style: TextStyle(fontSize: 18),),
-
-                              ],
+                            // ------------------ showing delete button-------------------
+                            Align(
+                              alignment: Alignment(index%7==2 ? 1.06:1.15,-1.08),
+                              child: IconButton(
+                                icon: Icon(Icons.delete),
+                                color: Colors.black54,
+                                onPressed: (){
+                                  context.read<DatabaseProvider>().deleteNote(arrNotes[index].id!);
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+
+
+                            // ------------------ Notes List using staggered Gridview------------
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15,15,20,15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(arrNotes[index].desc,style: TextStyle(fontSize: 23),softWrap: true,maxLines: 4,overflow: TextOverflow.ellipsis,),
+                                  Text(arrNotes[index].date,style: TextStyle(fontSize: 18),),
+
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-                staggeredTileBuilder: (index){
-                  return StaggeredTile.fit(index%7==2 ? 2:1);
-                }),
-          )
+                    );
+                  },
+                  staggeredTileBuilder: (index){
+                    return StaggeredTile.fit(index%7==2 ? 2:1);
+                  }),
+            );
+          },)
         ],
       ),
 
@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         elevation: 4,
         focusElevation: 2.0,
-        backgroundColor: Color(0xff1776b9),
+        backgroundColor: Color(0xff062f4d),
         onPressed: (){
           Navigator.push(context, MaterialPageRoute(builder: (context) => CreateNotePage(),));
         },

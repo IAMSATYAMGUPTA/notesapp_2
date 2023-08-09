@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:note_2_flutter/app_database.dart';
+import 'package:note_2_flutter/app_database_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'note_model.dart';
 
@@ -28,9 +30,6 @@ class _CreateNotePageState extends State<CreateNotePage> {
     myDB = AppDataBase.db;
   }
 
-  void addNote(String title,String desc,String currentDate)async{
-    await myDB.addNote(NoteModel(title: title, desc: desc, date: currentDate));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +76,12 @@ class _CreateNotePageState extends State<CreateNotePage> {
                 //-----------------------Save Note Work-----------------
                 InkWell(
                   onTap: widget.date!=null ? (){
-                    myDB.updateNote(NoteModel(title: titleController.text.toString(), desc: descController.text.toString(), date: currentDate,id: widget.id));
+                    context.read<DatabaseProvider>().updateNote(NoteModel(title: titleController.text.toString(), desc: descController.text.toString(), date: currentDate,id: widget.id));
+                    Navigator.pop(context);
                   }: (){
-                    addNote(titleController.text.toString(), descController.text.toString(),currentDate);
+                    context.read<DatabaseProvider>().addNote(NoteModel(title: titleController.text.toString(),desc: descController.text.toString(),date: currentDate));
+                    // Provider.of<DatabaseProvider>(context)
+                    Navigator.pop(context);
                   },
                   child: Container(
                     height: 40,
