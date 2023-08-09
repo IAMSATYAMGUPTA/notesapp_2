@@ -62,9 +62,9 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     Navigator.pop(context);
                   },
                   child: Container(
-                    height: 40,
-                    width: 40,
-                    child: Icon(Icons.arrow_back_ios_new,color: Colors.white,size: 27,),
+                    height: 37,
+                    width: 37,
+                    child: Icon(Icons.arrow_back_ios_new,color: Colors.white,size: 22,),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         color: Colors.white30
@@ -73,7 +73,7 @@ class _CreateNotePageState extends State<CreateNotePage> {
                 ),
 
 
-                //-----------------------Save Note Work-----------------
+                //-----------------------Save and update Note Work-----------------
                 InkWell(
                   onTap: widget.date!=null ? (){
                     context.read<DatabaseProvider>().updateNote(NoteModel(title: titleController.text.toString(), desc: descController.text.toString(), date: currentDate,id: widget.id));
@@ -84,10 +84,10 @@ class _CreateNotePageState extends State<CreateNotePage> {
                     Navigator.pop(context);
                   },
                   child: Container(
-                    height: 40,
-                    width: widget.date!=null ? 40:90,
-                    child: widget.date!=null ? Icon(Icons.update_rounded,color: Colors.white,size: 27,):
-                    Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 26),)),
+                    height: 37,
+                    width: widget.date!=null ? 40:70,
+                    child: widget.date!=null ? Icon(Icons.update_outlined,color: Colors.white,size: 27,):
+                    Center(child: Text("Save",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 20),)),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         color: Colors.white30
