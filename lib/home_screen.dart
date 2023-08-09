@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:note_2_flutter/app_database_provider.dart';
 import 'package:note_2_flutter/create_note.dart';
+import 'package:provider/provider.dart';
 
 import 'app_database.dart';
 import 'note_model.dart';
@@ -24,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     myDB = AppDataBase.db;
-    getNotes();
+    // getNotes();
   }
 
   void getNotes() async {
@@ -34,6 +36,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // Access the DatabaseProvider using provider
+    final databaseProvider = Provider.of<DatabaseProvider>(context);
+
+    // Call fetchNote to populate the list of notes
+    databaseProvider.fetchNote();
+
     return Scaffold(
       backgroundColor: Colors.black54,
       body: Column(
@@ -64,13 +73,15 @@ class _HomePageState extends State<HomePage> {
                 crossAxisCount: 2,
                 mainAxisSpacing: 13,
                 crossAxisSpacing: 13,
-                padding: EdgeInsets.only(left: 10,right: 10),
-                itemCount: arrNotes.length,
+                padding: EdgeInsets.only(left: 7,right: 7),
+                itemCount: databaseProvider.noteList.length,
                 itemBuilder: (context, index) {
+                  // Get the NoteModel for the current index
+                  NoteModel note = databaseProvider.noteList[index];
                   return InkWell(
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          CreateNotePage(title: arrNotes[index].title,desc: arrNotes[index].desc,date: arrNotes[index].date,id : arrNotes[index].id),));
+                          CreateNotePage(title: note.title,desc: note.desc,date: note.date,id : note.id),));
                     },
                     child: Container(
                       height: height[index % height.length],
@@ -82,27 +93,27 @@ class _HomePageState extends State<HomePage> {
                         children: [
 
                           // ------------------ showing delete button-------------------
-                          Align(
-                            alignment: Alignment(1,-1),
-                            child: IconButton(
-                              icon: Icon(Icons.delete),
-                              color: Colors.black,
-                              onPressed: (){
-                                myDB.deleteNote(arrNotes[index].id!);
-                                getNotes();
-                              },
-                            ),
-                          ),
+                          // Align(
+                          //   alignment: Alignment(1,-1),
+                          //   child: IconButton(
+                          //     icon: Icon(Icons.delete),
+                          //     color: Colors.black54,
+                          //     onPressed: (){
+                          //       myDB.deleteNote(arrNotes[index].id!);
+                          //       getNotes();
+                          //     },
+                          //   ),
+                          // ),
 
                           //------------------ Notes List using staggered Gridview------------
                           Padding(
-                            padding: const EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(15),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(arrNotes[index].desc,style: TextStyle(fontSize: 23),softWrap: true,maxLines: 4,overflow: TextOverflow.ellipsis,),
-                                Text(arrNotes[index].date,style: TextStyle(fontSize: 18),),
+                                Text(note.desc,style: TextStyle(fontSize: 23),softWrap: true,maxLines: 4,overflow: TextOverflow.ellipsis,),
+                                Text(note.date,style: TextStyle(fontSize: 18),),
 
                               ],
                             ),

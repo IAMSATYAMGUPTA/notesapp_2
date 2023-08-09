@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:note_2_flutter/app_database_provider.dart';
+import 'package:provider/provider.dart';
 import 'home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => DatabaseProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
