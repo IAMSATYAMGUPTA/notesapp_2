@@ -15,43 +15,28 @@ class DatabaseProvider extends ChangeNotifier{
 
   // add note database
   void addNote(NoteModel noteModel){
-    myDB.addNote(
-        NoteModel(
-            title: noteModel.title,
-            desc: noteModel.desc,
-            date: noteModel.date
-        )
-    ).then((value) {
+    myDB.addNote(noteModel).then((value) {
       fetchNote();
-      notifyListeners();
     });
   }
 
   // fetchNote database
   void fetchNote()async{
     _noteList = await myDB.fetchAllNotes();
+    notifyListeners();
   }
 
   // delete database
   void deleteNote(int id){
     myDB.deleteNote(id).then((value) {
       fetchNote();
-      notifyListeners();
     });
   }
 
   // update database
   void updateNote(NoteModel noteModel){
-    myDB.updateNote(
-        NoteModel(
-            id: noteModel.id,
-            title: noteModel.title,
-            desc: noteModel.desc,
-            date: noteModel.date
-        )
-    ).then((value) {
+    myDB.updateNote(noteModel).then((value) {
       fetchNote();
-      notifyListeners();
     });
   }
 

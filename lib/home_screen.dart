@@ -32,9 +32,6 @@ class _HomePageState extends State<HomePage> {
   // get provider refrrence for initial condition // also call fetch note fun in provider class
   void getNotes(){
     Provider.of<DatabaseProvider>(context,listen: false).fetchNote();
-    setState(() {
-
-    });
   }
 
   @override
@@ -45,13 +42,14 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           SizedBox(height: 30,),
+
+
+          // ------------------ showing title and search bar-------------------
           Container(
             margin: EdgeInsets.all(20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
-                // ------------------ showing title and search bar-------------------
                 Text("Notes",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: 30),),
                 Container(
                   height: 40,
@@ -65,9 +63,10 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+
+
           Consumer<DatabaseProvider>(builder: (context, value, child) {
             // Get the NoteModel for the current index
-            print("object");
             arrNotes = value.noteList;
             return Expanded(
               child: StaggeredGridView.countBuilder(
