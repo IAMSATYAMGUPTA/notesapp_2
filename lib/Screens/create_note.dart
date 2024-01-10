@@ -2,10 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:note_2_flutter/app_database.dart';
-import 'package:note_2_flutter/app_database_provider.dart';
+import 'package:note_2_flutter/bloc/note_bloc.dart';
+import 'package:note_2_flutter/bloc/note_event.dart';
+import 'package:note_2_flutter/Custom%20Widget/custom_toast.dart';
+import 'package:note_2_flutter/cubit/app_database_cubit.dart';
+import 'package:note_2_flutter/provider/app_database_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'note_model.dart';
+import '../note_model.dart';
+
 
 class CreateNotePage extends StatefulWidget {
   var id;
@@ -31,11 +36,30 @@ class _CreateNotePageState extends State<CreateNotePage> {
   }
 
   void addNote({required String title,required String desc,required String currentDate}){
-    context.read<DatabaseProvider>().addNote(NoteModel(title: title,desc: desc,date: currentDate));
+    if(title.length==0 && desc.length==0) {
+      CustommToast().toastMessage(msg: "please add title and Description");
+    }else if(title.length==0) {
+      CustommToast().toastMessage(msg: "please add title");
+    }else if(desc.length==0) {
+      CustommToast().toastMessage(msg: "please add Description");
+    }else{
+      context.read<DataBaseCubit>().addNote(NoteModel(title: title, desc: desc, date: currentDate));
+      Navigator.pop(context);
+    }
   }
 
   void updateNote({required String title,required String desc,required String currentDate,required int id}){
-    context.read<DatabaseProvider>().updateNote(NoteModel(title: title,desc: desc,date: currentDate,id: id));
+    if(title.length==0 && desc.length==0) {
+      CustommToast().toastMessage(msg: "please add title and Description");
+    }else if(title.length==0) {
+      CustommToast().toastMessage(msg: "please add title");
+    }else if(desc.length==0) {
+      CustommToast().toastMessage(msg: "please add Description");
+    }else{
+      context.read<DataBaseCubit>().updateNote(NoteModel(id: id,title: title, desc: desc, date: currentDate));
+      Navigator.pop(context);
+    }
+
   }
 
 
@@ -86,10 +110,8 @@ class _CreateNotePageState extends State<CreateNotePage> {
                   InkWell(
                     onTap: widget.date!=null ? (){
                       updateNote(title: titleController.text.toString(), desc: descController.text.toString(), currentDate : currentDate,id: widget.id);
-                      Navigator.pop(context);
                     }: (){
                       addNote(title: titleController.text.toString(),desc: descController.text.toString(),currentDate: currentDate);
-                      Navigator.pop(context);
                     },
                     child: Container(
                       height: 37,

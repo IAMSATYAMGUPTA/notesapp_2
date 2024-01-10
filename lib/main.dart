@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:note_2_flutter/app_database_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:note_2_flutter/app_database.dart';
+import 'package:note_2_flutter/cubit/app_database_cubit.dart';
+import 'package:note_2_flutter/provider/app_database_provider.dart';
+import 'package:note_2_flutter/bloc/note_bloc.dart';
 import 'package:provider/provider.dart';
-import 'home_screen.dart';
+import 'Screens/home_screen.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (context) => DatabaseProvider(),
-    child: const MyApp(),
+  runApp(BlocProvider(
+      create: (context) => DataBaseCubit(db: AppDataBase.db),
+      child: const MyApp(),
   ));
 }
 
